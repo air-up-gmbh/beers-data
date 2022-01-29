@@ -1,0 +1,5 @@
+[DB]
+database = beer_db
+username = postgres
+password = ********
+host = localhost
