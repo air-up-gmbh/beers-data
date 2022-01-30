@@ -4,7 +4,7 @@ import util
 
 def create_tables():
     """ create tables in the PostgreSQL database"""
-    commands = [
+    commands = (
         """
         CREATE TABLE beer (
             id INTEGER PRIMARY KEY,
@@ -22,7 +22,7 @@ def create_tables():
             amount_unit VARCHAR(10),
             amount_value FLOAT,
             beer_id INTEGER REFERENCES beer (id)
-            )
+        )
         """,
         """
         CREATE TABLE ingredients_hops (
@@ -33,9 +33,22 @@ def create_tables():
             amount_unit VARCHAR(10),
             amount_value FLOAT,
             beer_id INTEGER REFERENCES beer (id)
-            )
+        )
+        """,
         """
-    ]
+        CREATE TABLE food_pairing (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL UNIQUE
+        )
+        """,
+        """
+        CREATE TABLE beer_food_pairing_mapping (
+            beer_id INTEGER REFERENCES beer (id),
+            food_pairing_id INTEGER REFERENCES food_pairing (id),
+            PRIMARY KEY(beer_id, food_pairing_id)
+        )
+        """
+    )
     conn = None
     try:
         conn = util.get_postgres_conn()

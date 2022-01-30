@@ -1,8 +1,10 @@
 import json
+import re
 from datetime import datetime
 
 import pandas as pd
 import requests
+
 import util
 
 required_cols = ['id', 'name', 'tagline', 'first_brewed', 'abv', 'ingredients.yeast']
@@ -35,14 +37,14 @@ def convert_json_to_df(json_data, req_cols=None):
     return df
 
 
-def save_df_to_sql(df, table_name):
-    print("Saving data in db for table", table_name)
+def save_df_to_sql(df, table_name, method=None):
+    # print("Saving data in db for table", table_name)
     df.to_sql(
         name=table_name,
         con=util.get_sql_conn(),
         if_exists='append',
         index=False,
-        method=util.insert_on_duplicate
+        method=method
     )
 
 
@@ -56,10 +58,11 @@ def ingest_data(page_size, table_name):
     data = fetch_api_data('beers', page_no, page_size)
     df_final = convert_json_to_df(data, required_cols)
     df_final = df_final.rename(columns={"ingredients.yeast": "yeast"})
-    save_df_to_sql(df_final, table_name)
+    save_df_to_sql(df_final, table_name, util.insert_on_duplicate)
     for i, row in df_final.iterrows():
         save_ingredients_hops(i, row['id'], data)
         save_ingredients_malt(i, row['id'], data)
+        save_food_pairing(i, row['id'], data)
     util.ingestion_entry(table_name=table_name, start_time=start_time, count=len(df_final),
                          inc_state=df_final[inc_column].max(),
                          inc_column=inc_column, database=util.get_config('database'), status=True)
@@ -88,8 +91,45 @@ def save_ingredients_malt(index, beer_id, data):
     save_df_to_sql(df_malt, 'ingredients_malt')
 
 
+def save_food_pairing(index, beer_id, data):
+    foods = data[index]['food_pairing']
+    foods = [re.sub('[^a-zA-Z0-9 ]+', '', f) for f in foods]
+    df_fp = pd.DataFrame(foods, columns=['name'])
+    save_df_to_sql(df_fp, 'food_pairing', util.insert_food_paring)
+    save_beer_food_pairing_mapping(foods, beer_id)
+
+
+def save_beer_food_pairing_mapping(foods, beer_id):
+    conn = util.get_postgres_conn()
+    food_ids = []
+    for food in foods:
+        result = util.execute_query("SELECT id from food_pairing where name = '{}'".format(food), conn, False)
+        if result and result[0][0]:
+            food_ids.append(result[0][0])
+
+    if food_ids:
+        df = pd.DataFrame(food_ids, columns=['food_pairing_id'])
+        df['beer_id'] = beer_id
+        save_df_to_sql(df, 'beer_food_pairing_mapping', util.insert_beer_food_paring)
+    conn.close()
+
+
 if __name__ == '__main__':
-    tb = 'beer'
-    ingest_data(25, tb)
-    min_abv, max_abv = fetch_min_and_max_abv_value(tb)
+    tb_name = 'beer'
+    ingest_data(page_size=25, table_name=tb_name)
+    min_abv, max_abv = fetch_min_and_max_abv_value(tb_name)
     print(min_abv, max_abv)
+
+# """    insert_query = "INSERT INTO beer_food_pairing_mapping (beer_id, food_pairing_id) VALUES "
+#     values = []
+#     conn = util.get_postgres_conn()
+#     for food in foods:
+#         food_id_query = "SELECT id from food_pairing where name = '{}'".format(food)
+#         result = util.execute_query(food_id_query, conn, False)
+#         if result and result[0][0]:
+#             food_id = result[0][0]
+#             print(food_id)
+#             values.append('({beer_id}, {food_id})'.format(beer_id=beer_id, food_id=food_id))
+#     if values:
+#         insert_query += ', '.join(values)
+#         util.execute_insert_query(insert_query, conn)"""

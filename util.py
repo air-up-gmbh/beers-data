@@ -40,23 +40,25 @@ def get_metadata_conn():
     )
 
 
-def execute_query(query, conn):
+def execute_query(query, conn, close_conn=True):
     cursor = conn.cursor()
     print("Executing query : \n {}".format(query))
     cursor.execute(query)
     result = cursor.fetchall()
     cursor.close()
-    conn.close()
+    if close_conn:
+        conn.close()
     return result
 
 
-def execute_insert_query(query, conn):
+def execute_insert_query(query, conn, close_conn=True):
     cursor = conn.cursor()
     print("Executing query : \n {}".format(query))
     cursor.execute(query)
     _id = cursor.lastrowid
     conn.commit()
-    cursor.close()
+    if close_conn:
+        cursor.close()
     conn.close()
 
 
@@ -72,6 +74,18 @@ def get_sql_conn():
 def insert_on_duplicate(table, conn, keys, data_iter):
     insert_stmt = insert(table.table).values(list(data_iter))
     do_nothing_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['id'])
+    conn.execute(do_nothing_stmt)
+
+
+def insert_food_paring(table, conn, keys, data_iter):
+    insert_stmt = insert(table.table).values(list(data_iter))
+    do_nothing_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['name'])
+    conn.execute(do_nothing_stmt)
+
+
+def insert_beer_food_paring(table, conn, keys, data_iter):
+    insert_stmt = insert(table.table).values(list(data_iter))
+    do_nothing_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['beer_id', 'food_pairing_id'])
     conn.execute(do_nothing_stmt)
 
 
@@ -110,7 +124,7 @@ def ingestion_entry(table_name, start_time, count, inc_state, inc_column, databa
 
 def get_previous_ingestion_date(table_name):
     result = 0
-    query = "select max(inc_state) from {ingestion_table} where table_name = '{tb}' and state_of_run=True" \
+    query = "select max(NULLIF(inc_state, '')::INT) from {ingestion_table} where table_name = '{tb}' and state_of_run=True" \
         .format(ingestion_table=get_config('ingestion_table', METADATA_DB), tb=table_name)
     print("previous ingestion details fetch query : \n {}".format(query))
     query_data = execute_query(query, get_metadata_conn())
@@ -119,3 +133,17 @@ def get_previous_ingestion_date(table_name):
         print('Prev {} Ingestion details - {}'.format(table_name, query_data[0][0]))
         return result
     return result
+
+
+"""
+
+
+
+delete from beer_food_pairing_mapping;
+delete from food_pairing;
+delete from ingredients_malt;
+delete from ingredients_hops;
+delete from beer;
+
+delete from ingestion_history ;
+"""
