@@ -1,8 +1,9 @@
 import json
+from datetime import datetime
 
 import pandas as pd
 import requests
-import util as ut
+import util
 
 required_cols = ['id', 'name', 'tagline', 'first_brewed', 'abv']
 
@@ -34,20 +35,31 @@ def convert_json_to_df(json_data, req_cols=None):
     return df
 
 
-def save_df_to_sql(df, tb):
-    print("Saving data in db for table", tb)
+def save_df_to_sql(df, table_name, start_time):
+    print("Saving data in db for table", table_name)
+    inc_column = 'id'
     df.to_sql(
-        name=tb,
-        con=ut.get_sql_conn(),
+        name=table_name,
+        con=util.get_sql_conn(),
         if_exists='append',
         index=False,
-        method=ut.insert_on_duplicate
+        method=util.insert_on_duplicate
     )
+    util.ingestion_entry(table_name=table_name, start_time=start_time, count=len(df), inc_state=df[inc_column].max(),
+                         inc_column=inc_column, database=util.get_config('database'), status=True)
+
+
+def ingest_data(page_size, table_name):
+    prev_ingested_id = util.get_previous_ingestion_date(table_name)
+    print('prev_ingested_id', prev_ingested_id)
+    page_no = int(prev_ingested_id) // page_size + 1 if prev_ingested_id else 1
+    print('page_no', page_no)
+    start_time = datetime.now()
+    data = fetch_api_data('beers', page_no, page_size)
+    df_final = convert_json_to_df(data, required_cols)
+    save_df_to_sql(df_final, table_name, start_time)
 
 
 if __name__ == '__main__':
-    api_end_point = 'beers'
-    table_name = 'beers'
-    data = fetch_api_data(api_end_point, 1, 25)
-    df_final = convert_json_to_df(data, required_cols)
-    save_df_to_sql(df_final, table_name)
+    ingest_data(25, 'beers')
+

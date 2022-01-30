@@ -1,5 +1,12 @@
 [DB]
-database = beer_db
+database = airup
 username = postgres
-password = ********
+password = delete
 host = localhost
+
+[METADATA_DB]
+database = ingestion_metadata
+username = postgres
+password = delete
+host = localhost
+ingestion_table = ingestion_history
