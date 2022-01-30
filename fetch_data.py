@@ -60,6 +60,17 @@ def ingest_data(page_size, table_name):
     save_df_to_sql(df_final, table_name, start_time)
 
 
-if __name__ == '__main__':
-    ingest_data(25, 'beers')
+def fetch_min_and_max_abv_value(table_name):
+    abv_min, abv_max = 0, 0
+    query = "SELECT MIN(abv), MAX(abv) from {} where id > 200".format(table_name)
+    data = util.execute_query(query, util.get_postgres_conn())
+    if data and data[0][0]:
+        abv_min, abv_max = data[0][0], data[0][1]
+    return abv_min, abv_max
 
+
+if __name__ == '__main__':
+    tb = 'beers'
+    ingest_data(25, tb)
+    min_abv, max_abv = fetch_min_and_max_abv_value(tb)
+    print(min_abv, max_abv)
