@@ -8,7 +8,6 @@ from sqlalchemy.dialects.postgresql import insert
 config_parser = configparser.ConfigParser()
 config_parser.read('configs/config.param')
 
-# params_map = {}
 
 data_type = {'id': sql_types.Integer, 'name': sql_types.String(100), 'tagline': sql_types.String(150),
              'first_brewed': sql_types.String(10), 'abv': sql_types.Float}
@@ -17,8 +16,6 @@ METADATA_DB = 'METADATA_DB'
 
 
 def get_config(key, tag='DB'):
-    # if params_map.get(tag + key) is not None:
-    #     return params_map.get(tag + key)
     return config_parser[tag][key].strip()
 
 
@@ -122,7 +119,7 @@ def ingestion_entry(table_name, start_time, count, inc_state, inc_column, databa
         raise Exception("\nIngestion Entry  failed for " + table_name, e)
 
 
-def get_previous_ingestion_date(table_name):
+def get_previous_ingested_value(table_name):
     result = 0
     query = "select max(NULLIF(inc_state, '')::INT) from {ingestion_table} where table_name = '{tb}' and state_of_run=True" \
         .format(ingestion_table=get_config('ingestion_table', METADATA_DB), tb=table_name)
@@ -135,6 +132,7 @@ def get_previous_ingestion_date(table_name):
     return result
 
 
+# psql -h localhost -p 5432 -U postgres -W
 """
 
 

@@ -50,7 +50,7 @@ def save_df_to_sql(df, table_name, method=None):
 
 def ingest_data(page_size, table_name):
     inc_column = 'id'
-    prev_ingested_id = util.get_previous_ingestion_date(table_name)
+    prev_ingested_id = util.get_previous_ingested_value(table_name)
     print('prev_ingested_id', prev_ingested_id)
     page_no = int(prev_ingested_id) // page_size + 1 if prev_ingested_id else 1
     print('page_no', page_no)

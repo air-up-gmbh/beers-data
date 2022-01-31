@@ -1,12 +1,12 @@
 [DB]
 database = airup
 username = postgres
-password = delete
+password = *******
 host = localhost
 
 [METADATA_DB]
 database = ingestion_metadata
 username = postgres
-password = delete
+password = *******
 host = localhost
 ingestion_table = ingestion_history

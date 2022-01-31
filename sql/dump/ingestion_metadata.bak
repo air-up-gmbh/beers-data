@@ -1,0 +1,101 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.1 (Debian 14.1-1.pgdg110+1)
+-- Dumped by pg_dump version 14.1 (Debian 14.1-1.pgdg110+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: ingestion_history; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ingestion_history (
+    id integer NOT NULL,
+    table_name character varying(255) NOT NULL,
+    frequency character varying(255) NOT NULL,
+    db_name character varying(255) NOT NULL,
+    load_timestamp timestamp without time zone NOT NULL,
+    total_exe_time_sec integer NOT NULL,
+    state_of_run boolean DEFAULT false,
+    no_of_record integer NOT NULL,
+    load_type character varying(10) NOT NULL,
+    inc_state character varying(255),
+    inc_col character varying(255)
+);
+
+
+ALTER TABLE public.ingestion_history OWNER TO postgres;
+
+--
+-- Name: ingestion_history_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.ingestion_history_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ingestion_history_id_seq OWNER TO postgres;
+
+--
+-- Name: ingestion_history_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.ingestion_history_id_seq OWNED BY public.ingestion_history.id;
+
+
+--
+-- Name: ingestion_history id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingestion_history ALTER COLUMN id SET DEFAULT nextval('public.ingestion_history_id_seq'::regclass);
+
+
+--
+-- Data for Name: ingestion_history; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ingestion_history (id, table_name, frequency, db_name, load_timestamp, total_exe_time_sec, state_of_run, no_of_record, load_type, inc_state, inc_col) FROM stdin;
+27	beer	daily	airup	2022-01-31 11:42:35.177255	3	t	25	INC	25	id
+28	beer	daily	airup	2022-01-31 12:36:45.120998	4	t	25	INC	50	id
+\.
+
+
+--
+-- Name: ingestion_history_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.ingestion_history_id_seq', 28, true);
+
+
+--
+-- Name: ingestion_history ingestion_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingestion_history
+    ADD CONSTRAINT ingestion_history_pkey PRIMARY KEY (id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

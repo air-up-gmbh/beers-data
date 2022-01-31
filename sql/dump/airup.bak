@@ -1,0 +1,1378 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.1 (Debian 14.1-1.pgdg110+1)
+-- Dumped by pg_dump version 14.1 (Debian 14.1-1.pgdg110+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: beer; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.beer (
+    id integer NOT NULL,
+    name character varying(255),
+    tagline character varying(255),
+    first_brewed character varying(10),
+    abv double precision,
+    yeast character varying(255)
+);
+
+
+ALTER TABLE public.beer OWNER TO postgres;
+
+--
+-- Name: beer_food_pairing_mapping; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.beer_food_pairing_mapping (
+    beer_id integer NOT NULL,
+    food_pairing_id integer NOT NULL
+);
+
+
+ALTER TABLE public.beer_food_pairing_mapping OWNER TO postgres;
+
+--
+-- Name: beers; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.beers (
+    id integer NOT NULL,
+    name character varying(255),
+    tagline character varying(255),
+    first_brewed character varying(255),
+    abv double precision
+);
+
+
+ALTER TABLE public.beers OWNER TO postgres;
+
+--
+-- Name: beers1; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.beers1 (
+    id integer,
+    name character varying,
+    tagline character varying,
+    first_brewed character varying(50),
+    abv double precision
+);
+
+
+ALTER TABLE public.beers1 OWNER TO postgres;
+
+--
+-- Name: beers_2; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.beers_2 (
+    index bigint,
+    id bigint,
+    name text,
+    tagline text,
+    first_brewed text,
+    abv double precision
+);
+
+
+ALTER TABLE public.beers_2 OWNER TO postgres;
+
+--
+-- Name: food_pairing; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.food_pairing (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.food_pairing OWNER TO postgres;
+
+--
+-- Name: food_pairing_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.food_pairing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.food_pairing_id_seq OWNER TO postgres;
+
+--
+-- Name: food_pairing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.food_pairing_id_seq OWNED BY public.food_pairing.id;
+
+
+--
+-- Name: ingredients_hops; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ingredients_hops (
+    id integer NOT NULL,
+    name character varying(100),
+    add character varying(50),
+    attribute character varying(50),
+    amount_unit character varying(10),
+    amount_value double precision,
+    beer_id integer
+);
+
+
+ALTER TABLE public.ingredients_hops OWNER TO postgres;
+
+--
+-- Name: ingredients_hops_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.ingredients_hops_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ingredients_hops_id_seq OWNER TO postgres;
+
+--
+-- Name: ingredients_hops_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.ingredients_hops_id_seq OWNED BY public.ingredients_hops.id;
+
+
+--
+-- Name: ingredients_malt; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ingredients_malt (
+    id integer NOT NULL,
+    name character varying(100),
+    amount_unit character varying(10),
+    amount_value double precision,
+    beer_id integer
+);
+
+
+ALTER TABLE public.ingredients_malt OWNER TO postgres;
+
+--
+-- Name: ingredients_malt_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.ingredients_malt_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ingredients_malt_id_seq OWNER TO postgres;
+
+--
+-- Name: ingredients_malt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.ingredients_malt_id_seq OWNED BY public.ingredients_malt.id;
+
+
+--
+-- Name: food_pairing id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.food_pairing ALTER COLUMN id SET DEFAULT nextval('public.food_pairing_id_seq'::regclass);
+
+
+--
+-- Name: ingredients_hops id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingredients_hops ALTER COLUMN id SET DEFAULT nextval('public.ingredients_hops_id_seq'::regclass);
+
+
+--
+-- Name: ingredients_malt id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingredients_malt ALTER COLUMN id SET DEFAULT nextval('public.ingredients_malt_id_seq'::regclass);
+
+
+--
+-- Data for Name: beer; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.beer (id, name, tagline, first_brewed, abv, yeast) FROM stdin;
+26	Skull Candy	Pacific Hopped Amber Bitter.	02/2010	3.5	Wyeast 1056 - American Ale™
+27	Dog B	Cacao, Coffee Chili Anniversary Stout.	05/2013	15	Wyeast 1056 - American Ale™
+28	HBC 369	Single Hop India Pale Ale – 2012.	02/2012	6.7	Wyeast 1056 - American Ale™
+29	10 Heads High	Imperial Red Ale.	04/2013	7.8	Wyeast 1272 - American Ale II™
+30	Dana - IPA Is Dead	Single Hop India Pale Ale.	02/2013	6.7	Wyeast 1056 - American Ale™
+31	Nanny State	Alcohol Free Hoppy Ale.	08/2009	0.5	Wyeast 1056 - American Ale™
+32	AB:05	Belgian Imperial Stout.	12/2010	12.5	Wyeast 3522 - Belgian Ardennes™
+33	Sorachi Ace	Single Hop IPA Series - 2011.	01/2011	7.5	Wyeast 1056 - American Ale™
+34	Bourbon Baby	Barrel-Aged Scotch Ale.	01/2014	5.8	Wyeast 1056 - American Ale™
+35	Berliner Weisse With Raspberries And Rhubarb - B-Sides	Fruity Berliner Weisse.	11/2015	3.6	Wyeast 1056 - American Ale™
+36	Shipwrecker Circus (w/ Oskar Blues)	American Barley Wine - Oskar Blues Collab.	09/2013	10.5	Wyeast 1272 - American Ale II™
+37	Zephyr	There’s A Storm Brewing.	10/2008	12.5	Wyeast 1272 - American Ale II™
+38	Belgian Trappist	Unleash the Yeast Series.	09/2013	6.3	WLP500 - Monastery Ale
+39	Kohatu - IPA Is Dead	Single Hop India Pale Ale.	02/2014	7.2	Wyeast 1056 - American Ale™
+40	Hello My Name is Vladimir	Limonnik Infused Imperial IPA (Not for Gays).	01/2014	8.2	Wyeast 1056 - American Ale™
+41	AB:17	Three Coffee Rye Imperial Porter.	10/2014	10.7	Wyeast 1272 - American Ale II™
+42	Hardcore IPA	Explicit Imperial Ale. Citrusy. Resinous. Intense.	12/2009	9.2	Wyeast 1272 - American Ale II™
+43	American Wheat	Hoppy American Wheat.	07/2014	4.5	Wyeast 1010 - American Wheat™
+44	Dog Wired (w/8 Wired)	New Zealand Imperial Pilsner.	06/2013	7.1	Wyeast 2007 - Pilsen Lager™
+45	The Physics	Laid Back Amber Beer.	04/2007	5	Wyeast 1056 - American Ale™
+46	Anarchist Alchemist	Triple Hopped Triple Ipa.	03/2012	16.5	Wyeast 1272 - American Ale II™
+47	AB:15	Salted Caramel Popcorn Strong Ale.	03/2013	12.8	Wyeast 1272 - American Ale II™
+48	Goldings - IPA Is Dead	Single Hop India Pale Ale.	02/2013	6.7	Wyeast 1056 - American Ale™
+49	AB:14	Oak-Aged Imperial Weizenbock.	02/2013	10	Wyeast 3638 - Bavarian Wheat™
+50	Lost Dog (w/Lost Abbey)	Rum-Aged Imperial Porter - Lost Abbey Collab.	11/2011	10	Wyeast 1272 - American Ale II™
+1	Buzz	A Real Bitter Experience.	09/2007	4.5	Wyeast 1056 - American Ale™
+2	Trashy Blonde	You Know You Shouldn't	04/2008	4.1	Wyeast 1056 - American Ale™
+3	Berliner Weisse With Yuzu - B-Sides	Japanese Citrus Berliner Weisse.	11/2015	4.2	Wyeast 1056 - American Ale™
+4	Pilsen Lager	Unleash the Yeast Series.	09/2013	6.3	Wyeast 2007 - Pilsen Lager™
+5	Avery Brown Dredge	Bloggers' Imperial Pilsner.	02/2011	7.2	Wyeast 2007 - Pilsen Lager™
+6	Electric India	Vibrant Hoppy Saison.	05/2013	5.2	Wyeast 3711 - French Saison™
+7	AB:12	Imperial Black Belgian Ale.	07/2012	11.2	Wyeast 3522 - Belgian Ardennes™
+8	Fake Lager	Bohemian Pilsner.	03/2013	4.7	Wyeast 2007 - Pilsen Lager™
+9	AB:07	Whisky Cask-Aged Scotch Ale.	03/2010	12.5	Saflager S189
+10	Bramling X	Single Hop IPA Series - 2011.	01/2011	7.5	Wyeast 1056 - American Ale™
+11	Misspent Youth	Milk & Honey Scotch Ale.	04/2013	7.3	Wyeast 1056 - American Ale™
+12	Arcade Nation	Seasonal Black IPA.	12/2015	5.3	Wyeast 1056 - American Ale™
+13	Movember	Moustache-Worthy Beer.	11/2009	4.5	Wyeast 1056 - American Ale™
+14	Alpha Dog	Existential Red Ale.	02/2010	4.5	Wyeast 1056 - American Ale™
+15	Mixtape 8	An Epic Fusion Of Old Belgian, American New Wave, And Scotch Whisky.	01/2012	14.5	Wyeast 3522 - Belgian Ardennes™
+16	Libertine Porter	Dry-Hopped Aggressive Porter.	01/2012	6.1	Wyeast 1056 - American Ale™
+17	AB:06	Imperial Black IPA.	04/2011	11.2	Wyeast 1272 - American Ale II™
+18	Russian Doll – India Pale Ale	Nesting Hop Bomb.	08/2014	6	Wyeast 1056 - American Ale™
+19	Hello My Name Is Mette-Marit	Lingonberry Double IPA.	06/2013	8.2	Wyeast 1056 - American Ale™
+20	Rabiator	Imperial Wheat Beer	03/2011	10.27	Wyeast 3333 - German Wheat™
+21	Vice Bier	Hoppy Wheat Bier.	04/2013	4.3	Wyeast 3638 - Bavarian Wheat™
+22	Devine Rebel (w/ Mikkeller)	Oak-aged Barley Wine.	12/2008	12.5	Wyeast 1056 - American Ale™
+23	Storm	Islay Whisky Aged IPA.	12/2007	8	Wyeast 1056 - American Ale™
+24	The End Of History	The World's Strongest Beer.	06/2011	55	Wyeast 3522 - Belgian Ardennes™
+25	Bad Pixie	Spiced Wheat Beer.	10/2008	4.7	Wyeast 1056 - American Ale™
+\.
+
+
+--
+-- Data for Name: beer_food_pairing_mapping; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.beer_food_pairing_mapping (beer_id, food_pairing_id) FROM stdin;
+1	583
+1	584
+1	585
+2	586
+2	587
+2	588
+2	589
+3	590
+3	591
+3	592
+4	593
+4	594
+4	595
+5	596
+5	597
+5	598
+6	599
+6	600
+6	601
+7	602
+7	603
+7	604
+8	605
+8	606
+8	607
+9	608
+9	609
+9	610
+10	611
+10	612
+10	613
+11	614
+11	615
+11	616
+12	617
+12	618
+12	619
+13	620
+13	621
+13	622
+14	623
+14	624
+14	625
+14	626
+15	627
+15	628
+15	629
+16	630
+16	631
+16	632
+17	633
+17	634
+17	635
+18	636
+18	637
+18	638
+19	639
+19	640
+19	641
+20	642
+20	643
+20	644
+21	645
+21	646
+21	647
+22	648
+22	649
+22	650
+23	651
+23	652
+23	653
+24	654
+24	655
+24	656
+25	657
+25	658
+25	659
+26	660
+26	661
+26	662
+27	663
+27	664
+27	665
+28	666
+28	667
+28	668
+29	669
+29	670
+29	671
+30	672
+30	673
+30	674
+31	675
+32	676
+32	677
+32	678
+33	679
+33	680
+33	681
+34	663
+34	683
+34	684
+35	685
+35	686
+35	687
+36	688
+36	689
+36	690
+37	691
+37	692
+37	693
+38	694
+38	695
+38	696
+39	697
+39	698
+39	699
+40	700
+40	701
+40	702
+41	703
+41	704
+41	705
+42	706
+42	707
+42	708
+43	709
+43	710
+43	711
+44	712
+44	713
+44	714
+45	715
+45	716
+45	717
+46	718
+46	719
+46	720
+47	721
+47	722
+47	723
+48	724
+48	725
+48	726
+49	727
+49	728
+49	729
+50	730
+50	731
+50	732
+\.
+
+
+--
+-- Data for Name: beers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.beers (id, name, tagline, first_brewed, abv) FROM stdin;
+1	Buzz	A Real Bitter Experience.	09/2007	4.5
+2	Trashy Blonde	You Know You Shouldn't	04/2008	4.1
+3	Berliner Weisse With Yuzu - B-Sides	Japanese Citrus Berliner Weisse.	11/2015	4.2
+4	Pilsen Lager	Unleash the Yeast Series.	09/2013	6.3
+5	Avery Brown Dredge	Bloggers' Imperial Pilsner.	02/2011	7.2
+6	Electric India	Vibrant Hoppy Saison.	05/2013	5.2
+7	AB:12	Imperial Black Belgian Ale.	07/2012	11.2
+8	Fake Lager	Bohemian Pilsner.	03/2013	4.7
+9	AB:07	Whisky Cask-Aged Scotch Ale.	03/2010	12.5
+10	Bramling X	Single Hop IPA Series - 2011.	01/2011	7.5
+11	Misspent Youth	Milk & Honey Scotch Ale.	04/2013	7.3
+12	Arcade Nation	Seasonal Black IPA.	12/2015	5.3
+13	Movember	Moustache-Worthy Beer.	11/2009	4.5
+14	Alpha Dog	Existential Red Ale.	02/2010	4.5
+15	Mixtape 8	An Epic Fusion Of Old Belgian, American New Wave, And Scotch Whisky.	01/2012	14.5
+16	Libertine Porter	Dry-Hopped Aggressive Porter.	01/2012	6.1
+17	AB:06	Imperial Black IPA.	04/2011	11.2
+18	Russian Doll – India Pale Ale	Nesting Hop Bomb.	08/2014	6
+19	Hello My Name Is Mette-Marit	Lingonberry Double IPA.	06/2013	8.2
+20	Rabiator	Imperial Wheat Beer	03/2011	10.27
+21	Vice Bier	Hoppy Wheat Bier.	04/2013	4.3
+22	Devine Rebel (w/ Mikkeller)	Oak-aged Barley Wine.	12/2008	12.5
+23	Storm	Islay Whisky Aged IPA.	12/2007	8
+24	The End Of History	The World's Strongest Beer.	06/2011	55
+25	Bad Pixie	Spiced Wheat Beer.	10/2008	4.7
+26	Skull Candy	Pacific Hopped Amber Bitter.	02/2010	3.5
+27	Dog B	Cacao, Coffee Chili Anniversary Stout.	05/2013	15
+28	HBC 369	Single Hop India Pale Ale – 2012.	02/2012	6.7
+29	10 Heads High	Imperial Red Ale.	04/2013	7.8
+30	Dana - IPA Is Dead	Single Hop India Pale Ale.	02/2013	6.7
+31	Nanny State	Alcohol Free Hoppy Ale.	08/2009	0.5
+32	AB:05	Belgian Imperial Stout.	12/2010	12.5
+33	Sorachi Ace	Single Hop IPA Series - 2011.	01/2011	7.5
+34	Bourbon Baby	Barrel-Aged Scotch Ale.	01/2014	5.8
+35	Berliner Weisse With Raspberries And Rhubarb - B-Sides	Fruity Berliner Weisse.	11/2015	3.6
+36	Shipwrecker Circus (w/ Oskar Blues)	American Barley Wine - Oskar Blues Collab.	09/2013	10.5
+37	Zephyr	There’s A Storm Brewing.	10/2008	12.5
+38	Belgian Trappist	Unleash the Yeast Series.	09/2013	6.3
+39	Kohatu - IPA Is Dead	Single Hop India Pale Ale.	02/2014	7.2
+40	Hello My Name is Vladimir	Limonnik Infused Imperial IPA (Not for Gays).	01/2014	8.2
+41	AB:17	Three Coffee Rye Imperial Porter.	10/2014	10.7
+42	Hardcore IPA	Explicit Imperial Ale. Citrusy. Resinous. Intense.	12/2009	9.2
+43	American Wheat	Hoppy American Wheat.	07/2014	4.5
+44	Dog Wired (w/8 Wired)	New Zealand Imperial Pilsner.	06/2013	7.1
+45	The Physics	Laid Back Amber Beer.	04/2007	5
+46	Anarchist Alchemist	Triple Hopped Triple Ipa.	03/2012	16.5
+47	AB:15	Salted Caramel Popcorn Strong Ale.	03/2013	12.8
+48	Goldings - IPA Is Dead	Single Hop India Pale Ale.	02/2013	6.7
+49	AB:14	Oak-Aged Imperial Weizenbock.	02/2013	10
+50	Lost Dog (w/Lost Abbey)	Rum-Aged Imperial Porter - Lost Abbey Collab.	11/2011	10
+51	TM10	Liquid Art.	04/2010	5.5
+52	Paradox Islay	Ubiquitous Imperial Stout.	04/2007	10
+53	Baby Dogma	Session Scotch Ale.	09/2013	4.5
+54	Albino Squid Assasin	Red Rye IPA	11/2015	7.4
+55	Amarillo - IPA Is Dead	Single Hop India Pale Ale.	01/2013	7.2
+56	Black Eyed King Imp	Barrel-Aged Prototype Cocoa Psycho.	11/2012	9.5
+57	Prototype 27	Vibrant Smoky Pink IPA.	04/2010	9.2
+58	Coffee Imperial Stout	Beats a Cup of Joe.	11/2008	9
+59	Mandarina Bavaria - IPA Is Dead	Single Hop India Pale Ale.	03/2015	7.2
+60	Dogma	Revamped Wee Heavy. Luscious. Malty. Fruity.	07/2013	7.5
+61	Magic Stone Dog (w/Magic Rock & Stone Brewing Co.)	Session Farmhouse IPA - Stone / Magic Rock Collab.	06/2014	4.6
+62	AB:08	Deconstructed Blonde Imperial Stout.	11/2011	10.43
+63	Sunk Punk	Ocean Fermented Lager.	09/2011	7.1
+64	Sub Hop	Hopped-Up Imperial Pilsner.	06/2014	8
+65	Bracken's Porter	A Tribute To Our Favourite 4 Pawed Friend.	03/2013	5
+66	Tokyo Rising Sun - Lowland	A Beautiful Accident.	06/2009	13.2
+67	Hunter Foundation Pale Ale	American Pale Ale.	05/2012	5.4
+68	Hype	New Zealand Pale Ale.	08/2007	4.1
+69	AB:16	Coffee-Infused Belgian Quad.	02/2014	10.6
+70	Sunmaid Stout	Rum & Raisin Imperial Stout.	12/2011	10.2
+71	Pale - Russian Doll	Nesting Hop Bomb.	08/2014	4
+72	Whisky Sour - B-Sides	Pilot Brew - Deconstructed Whisky Sour.	03/2015	7
+73	Black Eyed King Imp - Vietnamese Coffee Edition	Vietnamese Coffee Edition.	12/2014	12.7
+74	Eurotrash	Belgian Blonde.	10/2009	4.1
+75	Never Mind The Anabolics	Performance-Enhancing India Pale Ale.	06/2012	6.5
+76	#Mashtag 2013	Democratic American Brown Ale.	05/2013	7.5
+77	Hobo Pop	2013 Prototype Rye Pale Ale.	11/2013	4.2
+78	AB:18	Imperial Brown Ale Aged In Rum Casks.	10/2011	11.8
+79	Hops Kill Nazis	Imperial Red Ale.	08/2011	7.6
+80	AB:04	Imperial Stout With Coffee, Loads Of Cocoa And Chilli.	08/2010	15
+81	India Session Lager - Prototype Challenge	Refreshing Hop Fix.	11/2015	4.4
+82	Hopped-Up Brown Ale - Prototype Challenge	Malt Hop Balance.	01/2016	6.3
+83	Comet	Single Hop India Pale Ale	02/2014	7.2
+84	Baby Saison - B-Sides	Trial Baby Saison.	08/2015	3.6
+85	Santa Paws	Christmas Scoth Ale.	10/2010	4.5
+86	Original Dogma (Née Speedball)	Strong Ale With Honey And Spices.	07/2008	7.8
+87	Alpha Pop	Hoppy Rye Pale Ale.	03/2014	4.5
+88	Bavarian Weizen	Unleash the Yeast Series.	09/2013	6.3
+89	Citra	Single Hop IPA Series – 2011.	01/2011	7.5
+90	#Mashtag 2015	US Hopped Black Barley Wine.	05/2015	10
+91	Dead Pony Club	West Coast Kicks. Citrusy. Zesty. Bright.	03/2012	3.8
+92	AB:09	Cranachan Imperial Stout.	11/2010	11.6
+93	Mango Gose - B-Sides	Hoppy Mango Gose.	07/2015	6.4
+94	Everday Anarchy	White Wine Barrel-Aged Imperial Red Saison.	06/2013	10.5
+95	Peroxide Punk	Zesty Pale Ale.	04/2007	4
+96	Lumberjack Stout	Blueberry Bacon Stout.	12/2013	15.2
+97	Bowman's Beard - B-Sides	English Barley Wine.	03/2015	18.3
+98	Pumpkin King	Spicy Citrus Pumpkin Ale.	08/2015	5.4
+99	Hello My Name Is Päivi	Sea Buckthorn Double IPA.	05/2014	8.3
+100	Elvis Juice V2.0 - Prototype Challenge	Citrus Infused IPA.	12/2015	6.5
+\.
+
+
+--
+-- Data for Name: beers1; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.beers1 (id, name, tagline, first_brewed, abv) FROM stdin;
+1	Buzz	A Real Bitter Experience.	09/2007	4.5
+2	Trashy Blonde	You Know You Shouldn't	04/2008	4.1
+3	Berliner Weisse With Yuzu - B-Sides	Japanese Citrus Berliner Weisse.	11/2015	4.2
+4	Pilsen Lager	Unleash the Yeast Series.	09/2013	6.3
+5	Avery Brown Dredge	Bloggers' Imperial Pilsner.	02/2011	7.2
+6	Electric India	Vibrant Hoppy Saison.	05/2013	5.2
+7	AB:12	Imperial Black Belgian Ale.	07/2012	11.2
+8	Fake Lager	Bohemian Pilsner.	03/2013	4.7
+9	AB:07	Whisky Cask-Aged Scotch Ale.	03/2010	12.5
+10	Bramling X	Single Hop IPA Series - 2011.	01/2011	7.5
+11	Misspent Youth	Milk & Honey Scotch Ale.	04/2013	7.3
+12	Arcade Nation	Seasonal Black IPA.	12/2015	5.3
+13	Movember	Moustache-Worthy Beer.	11/2009	4.5
+14	Alpha Dog	Existential Red Ale.	02/2010	4.5
+15	Mixtape 8	An Epic Fusion Of Old Belgian, American New Wave, And Scotch Whisky.	01/2012	14.5
+16	Libertine Porter	Dry-Hopped Aggressive Porter.	01/2012	6.1
+17	AB:06	Imperial Black IPA.	04/2011	11.2
+18	Russian Doll – India Pale Ale	Nesting Hop Bomb.	08/2014	6
+19	Hello My Name Is Mette-Marit	Lingonberry Double IPA.	06/2013	8.2
+20	Rabiator	Imperial Wheat Beer	03/2011	10.27
+21	Vice Bier	Hoppy Wheat Bier.	04/2013	4.3
+22	Devine Rebel (w/ Mikkeller)	Oak-aged Barley Wine.	12/2008	12.5
+23	Storm	Islay Whisky Aged IPA.	12/2007	8
+24	The End Of History	The World's Strongest Beer.	06/2011	55
+25	Bad Pixie	Spiced Wheat Beer.	10/2008	4.7
+26	Skull Candy	Pacific Hopped Amber Bitter.	02/2010	3.5
+27	Dog B	Cacao, Coffee Chili Anniversary Stout.	05/2013	15
+28	HBC 369	Single Hop India Pale Ale – 2012.	02/2012	6.7
+29	10 Heads High	Imperial Red Ale.	04/2013	7.8
+30	Dana - IPA Is Dead	Single Hop India Pale Ale.	02/2013	6.7
+31	Nanny State	Alcohol Free Hoppy Ale.	08/2009	0.5
+32	AB:05	Belgian Imperial Stout.	12/2010	12.5
+33	Sorachi Ace	Single Hop IPA Series - 2011.	01/2011	7.5
+34	Bourbon Baby	Barrel-Aged Scotch Ale.	01/2014	5.8
+35	Berliner Weisse With Raspberries And Rhubarb - B-Sides	Fruity Berliner Weisse.	11/2015	3.6
+36	Shipwrecker Circus (w/ Oskar Blues)	American Barley Wine - Oskar Blues Collab.	09/2013	10.5
+37	Zephyr	There’s A Storm Brewing.	10/2008	12.5
+38	Belgian Trappist	Unleash the Yeast Series.	09/2013	6.3
+39	Kohatu - IPA Is Dead	Single Hop India Pale Ale.	02/2014	7.2
+40	Hello My Name is Vladimir	Limonnik Infused Imperial IPA (Not for Gays).	01/2014	8.2
+\.
+
+
+--
+-- Data for Name: beers_2; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.beers_2 (index, id, name, tagline, first_brewed, abv) FROM stdin;
+0	11	Misspent Youth	Milk & Honey Scotch Ale.	04/2013	7.3
+1	12	Arcade Nation	Seasonal Black IPA.	12/2015	5.3
+2	13	Movember	Moustache-Worthy Beer.	11/2009	4.5
+3	14	Alpha Dog	Existential Red Ale.	02/2010	4.5
+4	15	Mixtape 8	An Epic Fusion Of Old Belgian, American New Wave, And Scotch Whisky.	01/2012	14.5
+5	16	Libertine Porter	Dry-Hopped Aggressive Porter.	01/2012	6.1
+6	17	AB:06	Imperial Black IPA.	04/2011	11.2
+7	18	Russian Doll – India Pale Ale	Nesting Hop Bomb.	08/2014	6
+8	19	Hello My Name Is Mette-Marit	Lingonberry Double IPA.	06/2013	8.2
+9	20	Rabiator	Imperial Wheat Beer	03/2011	10.27
+\.
+
+
+--
+-- Data for Name: food_pairing; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.food_pairing (id, name) FROM stdin;
+583	Spicy chicken tikka masala
+584	Grilled chicken quesadilla
+585	Caramel toffee cake
+586	Fresh crab with lemon
+587	Garlic butter dipping sauce
+588	Goats cheese salad
+589	Creamy lemon bar doused in powdered sugar
+590	Smoked chicken wings
+591	Miso ramen
+592	Yuzu cheesecake
+593	Spicy crab cakes
+594	Spicy cucumber and carrot Thai salad
+595	Sweet filled dumplings
+596	Vietnamese squid salad
+597	Chargrilled corn on the cob with paprika butter
+598	Strawberry and rhubarb pie
+599	Mussels with a garlic and herb sauce
+600	Crab melt sandwich
+601	Shortbread cookies
+602	Tandoori lamb with pomegranate
+603	Beef Wellington with a red wine jus
+604	Raspberry chocolate torte
+605	Fried crab cakes with avocado salsa
+606	Spicy shredded pork roll with hot dipping sauce
+607	Key lime pie
+608	Kedgeree
+609	Scotch broth with sourdough bread
+610	Clootie dumpling
+611	Warm blackberry pie
+612	Vinegar doused fish and chips
+613	Aromatic korma curry with lemon and garlic naan
+614	Roasted garlic and chilli infused camembert cheese
+615	Korean style chicken wings
+616	Chocolate milk shake
+617	King prawn kebabs
+618	Halibut with a mango and tomato salad
+619	Mint chocloate ice cream
+620	Vegetable egg scramble
+621	Margherita pizza
+622	Fresh berry crisp tart
+623	Pastrami
+624	Swiss and horseradish sandwich
+625	Sharp cheddar cheese and onion raisin chutney
+626	Peanut brittle
+627	Coriander  chilli crab cakes
+628	Goats cheese salad with walnuts radish and blood orange
+629	Pistachio cake
+630	Blue cheese beef burger
+631	Glazed short ribs
+632	Chocolate cake
+633	Coffee dusted venison loin
+634	Memphisstyle beef short ribs
+635	Chocolate orange brownies
+636	Spicy chicken skewers
+637	Fish tacos with hot sauce
+638	Lemon pound cake with a ice sugar glaze
+639	Farikal mutton stew with a spicy twist
+640	Fenalar salted cured lamb
+641	Krumkake with lingonberry jam
+642	Grilled portabello mushroom burger
+643	Chicken sausages with creamy mash
+644	Caramel and banana meringue pie
+645	Citrus salad with balsamic dressing
+646	Lobster
+647	Ginger and orange cookies
+648	Stilton on gingerbread biscuits
+649	Pot roasted artichokes
+650	Lamb chops with caramelised figs
+651	Oysters
+652	Hickory smoked ham
+653	Rocky Road
+654	Roasted wood pigeon with black pudding
+655	Pan seared venison fillet with juniper sauce
+656	Apricot coconut cake
+657	Poached sole fillet with capers
+658	Summer fruit salad
+659	Banana split
+660	Haggis bon bons
+661	Rosemary and lemon roast chicken
+662	Oatmeal and cranberry cookies
+663	Blackened cajun beef
+664	Blue cheese
+665	Flourless chocolate cheesecake
+666	Spicy jalapeno  seared steak fajitas
+667	Grilled spicy corn with feta crumbles
+668	Blueberry pie
+669	Arrabiata pasta
+670	Mulled cheddar
+671	Toasted almond cake
+672	Spicy Asianstyle noodles
+673	Smokey chipotle beef brisket tostada
+674	Sweet potato pie
+675	Earthy mushroom pasta
+676	Venison with cacao nibs
+677	Apple upsidedown cake
+678	Toffee marshmallow pie
+679	Sashimi
+680	Grilled salmon with a herb and citrus infused butter
+681	Basil lemon and pine nut angel hair pasta with grilled chicken
+683	Pulled pork
+684	Millionaires shortbread
+685	Grilled salmon
+686	Mac and cheese fries
+687	Cheesecake with raspberry coulis
+688	Stilton
+689	Pan seared steak
+690	Dark Chocolate Fondant
+691	Poached eggs and smoked salmon
+692	Salt and pepper squid
+693	Key Lime Pie
+694	Roast beef with spicy jus
+695	Ginger bread cookies
+696	Orange tart
+697	Tuna sushi roll with spicy mayonnaise sauce
+698	Thai green curry
+699	Pineapple upside down cake
+700	Russian mini pork pies
+701	Beef Stroganoff
+702	Chocolate and fruit cake
+703	12hr smoked brisket
+704	Chocolate pistachio cakes
+705	Dulche de leche
+706	Spicy wings with blue cheese dip
+707	Pan seared scallops with a chilli sauce
+708	Creamy chocolate and caramel cheesecake
+709	Strawberry and citrus salad
+710	Fish corn tacos with pomegranate salsa
+711	Summer berry fruit parfait
+712	Spiced and blackened cajun chicken
+713	Pork belly vindaloo
+714	Rhubarb pie
+715	Barbecue pulled pork on sourdough bread
+716	Roast turkey with a honey and herb marinade and roasted vegetables
+717	Banana walnut loaf with chocolate chips
+718	Blue cheese  onion tart
+719	Goan goat curry
+720	Sugarpoached kumquat rice pudding
+721	Crispy bacon on flat bread
+722	Glazed ham with crackling coating
+723	Popcorn caramel and chocolate cake
+724	Rosemary and thyme marinated venison
+725	Fish and chips
+726	Lavender chocolate chip cookies
+727	Sweet pork Chinese dumplings
+728	Caramelised onion venison burger
+729	Banoffee pie
+730	Beef satay skewers
+731	Venison  cranberry pie
+732	Blackberry mocha gateaux
+\.
+
+
+--
+-- Data for Name: ingredients_hops; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ingredients_hops (id, name, add, attribute, amount_unit, amount_value, beer_id) FROM stdin;
+1354	Fuggles	start	bitter	grams	25	1
+1355	First Gold	start	bitter	grams	25	1
+1356	Fuggles	middle	flavour	grams	37.5	1
+1357	First Gold	middle	flavour	grams	37.5	1
+1358	Cascade	end	flavour	grams	37.5	1
+1359	Amarillo	start	bitter	grams	13.8	2
+1360	Simcoe	start	bitter	grams	13.8	2
+1361	Amarillo	end	flavour	grams	26.3	2
+1362	Motueka	end	flavour	grams	18.8	2
+1363	Bramling Cross	middle	bitter	grams	10	3
+1364	Centennial	start	bitter	grams	5	4
+1365	Amarillo	start	bitter	grams	5	4
+1366	Centennial	middle	flavour	grams	10	4
+1367	Amarillo	middle	flavour	grams	10	4
+1368	Centennial	end	flavour	grams	17.5	4
+1369	Amarillo	end	flavour	grams	17.5	4
+1370	Saaz	start	bitter	grams	60	5
+1371	Saaz	middle	flavour	grams	60	5
+1372	Saaz	end	flavour	grams	60	5
+1373	Amarillo	start	bitter	grams	2.5	6
+1374	Nelson Sauvin	middle	flavour	grams	5	6
+1375	Amarillo	middle	flavour	grams	5	6
+1376	Peppercorns	middle	flavour	grams	2.5	6
+1377	Nelson Sauvin	end	flavour	grams	20	6
+1378	Amarillo	end	flavour	grams	12.5	6
+1379	Tomahawk	start	bitter	grams	31.25	7
+1380	Magnum	start	bitter	grams	12.5	7
+1381	Magnum	middle	flavour	grams	12.5	7
+1382	Tomahawk	end	flavour	grams	12.5	7
+1383	Centennial	end	flavour	grams	25	7
+1384	Amarillo	end	flavour	grams	25	7
+1385	Centennial	dry hop	aroma	grams	25	7
+1386	Amarillo	dry hop	aroma	grams	25	7
+1387	Tomahawk	dry hop	aroma	grams	37.5	7
+1388	Magnum	start	bitter	grams	7.5	8
+1389	Magnum	middle	flavour	grams	5	8
+1390	Hersbrucker	middle	flavour	grams	6.25	8
+1391	Saaz	middle	flavour	grams	6.25	8
+1392	Hersbrucker	end	flavour	grams	18.75	8
+1393	Saaz	end	flavour	grams	18.75	8
+1394	Saaz	start	bitter	grams	25	9
+1395	First Gold	start	bitter	grams	31.3	9
+1396	Bramling Cross	start	bitter	grams	60	10
+1397	Bramling Cross	end	flavour	grams	50	10
+1398	First Gold	start	bitter	grams	25	11
+1399	Fuggles	start	bitter	grams	25	11
+1400	Honey	middle	Flavour	grams	250	11
+1401	Lactose	middle	Flavour	grams	375	11
+1402	First Gold	end	aroma	grams	10	11
+1403	Fuggles	end	aroma	grams	10	11
+1404	Simcoe	start	bitter	grams	12.5	12
+1405	Simcoe	middle	flavour	grams	19	12
+1406	Simcoe	end	flavour	grams	12.5	12
+1407	Amarillo	end	flavour	grams	12.5	12
+1408	Citra	end	flavour	grams	12.5	12
+1409	Simcoe	dry hop	aroma	grams	62.5	12
+1410	Amarillo	dry hop	aroma	grams	62.5	12
+1411	Citra	dry hop	aroma	grams	62.5	12
+1412	Cascade	start	bitter	grams	43.8	13
+1413	Cascade	end	flavour	grams	81.3	13
+1414	Cascade	dry hop	aroma	grams	250	13
+1415	Nelson Sauvin	start	bitter	grams	15	14
+1416	Amarillo	end	flavour	grams	10	14
+1417	Nelson Sauvin	end	flavour	grams	30	14
+1418	Columbus Extract	start	bitter	grams	12.5	15
+1419	Centennial	end	flavour	grams	37.5	15
+1420	Cascade	end	flavour	grams	37.5	15
+1421	Simcoe	end	flavour	grams	37.5	15
+1422	Columbus	start	bitter	grams	31.25	16
+1423	Columbus	end	bitter	grams	25	16
+1424	Willamette	end	flavour	grams	25	16
+1425	Galena	end	flavour	grams	25	16
+1426	Columbus	dry hop	aroma	grams	75	16
+1427	Galena	dry hop	aroma	grams	75	16
+1428	Simcoe	dry hop	aroma	grams	100	16
+1429	Hop Extract	start	bitter	grams	20	17
+1430	Amarillo	start	bitter	grams	25	17
+1431	Chinook	end	flavour	grams	25	17
+1432	Cascade	end	flavour	grams	25	17
+1433	Centennial	end	flavour	grams	25	17
+1434	Columbus	end	flavour	grams	25	17
+1435	Chinook	dry hop	aroma	grams	25	17
+1436	Cascade	dry hop	aroma	grams	25	17
+1437	Centennial	dry hop	aroma	grams	25	17
+1438	Columbus	dry hop	aroma	grams	25	17
+1439	Amarillo	dry hop	aroma	grams	25	17
+1440	Cascade	start	bitter	grams	2.5	18
+1441	Centennial	middle	flavour	grams	12.5	18
+1442	Simcoe	middle	flavour	grams	17.5	18
+1443	Simcoe	end	flavour	grams	17.5	18
+1444	Citra	end	flavour	grams	17.5	18
+1445	Simcoe	dry hop	aroma	grams	75	18
+1446	Cascade	dry hop	aroma	grams	75	18
+1447	Centennial	dry hop	aroma	grams	75	18
+1448	Citra	dry hop	aroma	grams	25	18
+1449	Tomahawk	start	bitter	grams	7	19
+1450	Motueka	start	bitter	grams	5.5	19
+1451	Galena	middle	flavour	grams	2.5	19
+1452	Mt.Hood	middle	flavour	grams	2.5	19
+1453	Challenger	dry hop	aroma	grams	15	19
+1454	Galena	dry hop	aroma	grams	15	19
+1455	Nelson Sauvin	dry hop	aroma	grams	20	19
+1456	Columbus	start	bitter	grams	12.5	20
+1457	Hersbrucker	middle	flavour	grams	12.5	20
+1458	Waimea	start	bitter	grams	2.5	21
+1459	Amarillo	middle	flavour	grams	2.5	21
+1460	Nelson Sauvin	middle	flavour	grams	2.5	21
+1461	Motueka	middle	flavour	grams	2.5	21
+1462	Simcoe	end	flavour	grams	6	21
+1463	Citra	end	flavour	grams	6	21
+1464	Waimea	end	flavour	grams	6	21
+1465	Nelson Sauvin	start	bitter	grams	100	22
+1466	Nelson Sauvin	end	flavour	grams	100	22
+1467	Ahtanum	start	bitter	grams	17.5	23
+1468	Chinook	start	bitter	grams	15	23
+1469	Crystal	middle	flavour	grams	17.5	23
+1470	Chinook	middle	flavour	grams	17.5	23
+1471	Ahtanum	end	flavour	grams	17.5	23
+1472	Chinook	end	flavour	grams	27.5	23
+1473	Crystal	end	flavour	grams	17.5	23
+1474	Motueka	end	flavour	grams	17.5	23
+1475	Nelson Sauvin	start	bitter	grams	6.25	24
+1476	Centennial	start	bitter	grams	12.5	24
+1477	Nelson Sauvin	end	flavour	grams	12.5	24
+1478	Amarillo	end	flavour	grams	12.5	24
+1479	Centennial	end	flavour	grams	12.5	24
+1480	First Gold	start	bitter	grams	18.75	25
+1481	First Gold	end	flavour	grams	25	25
+1482	Sorachi Ace	end	flavour	grams	16.25	25
+1483	Cascade	start	bitter	grams	25	26
+1484	Cascade	end	flavour	grams	18.8	26
+1485	Centennial	end	flavour	grams	18.8	26
+1486	Amarillo	end	flavour	grams	25	26
+1487	Simcoe	end	flavour	grams	31.3	26
+1488	Chinook	start	bitter	grams	50	27
+1489	Cascade	start	bitter	grams	25	27
+1490	Fuggles	15	bitter	grams	25	27
+1491	Coffee	15	twist	grams	12.5	27
+1492	Fuggles	0	 aroma	grams	25	27
+1493	Coffee	0	twist	grams	12.5	27
+1494	HBC 369	start	bitter	grams	40	28
+1495	HBC 369	end	flavour	grams	100	28
+1496	HBC 369	dry hop	aroma	grams	250	28
+1497	Chinook	start	bitter	grams	20	29
+1498	Chinook	middle	bitter	grams	5	29
+1499	Centennial	middle	bitter	grams	5	29
+1500	Chinook	end	flavour	grams	62.5	29
+1501	Centennial	end	flavour	grams	62.5	29
+1502	Chinook	dry hop	aroma	grams	100	29
+1503	Dana	start	bitter	grams	2.5	30
+1504	Dana	middle	flavour	grams	25	30
+1505	Dana	end	flavour	grams	37.5	30
+1506	Dana	dry hop	aroma	grams	125	30
+1507	Amarillo	start	bitter	grams	6.3	31
+1508	Simcoe	start	bitter	grams	5	31
+1509	Centennial	start	bitter	grams	6.3	31
+1510	Amarillo	middle	flavour	grams	6.3	31
+1511	Simcoe	middle	flavour	grams	2.5	31
+1512	Centennial	middle	flavour	grams	6.3	31
+1513	Amarillo	end	flavour	grams	5	31
+1514	Simcoe	end	flavour	grams	5	31
+1515	Cascade	end	flavour	grams	12.5	31
+1516	Ahtanum	end	flavour	grams	12.5	31
+1517	Centennial	dry hop	aroma	grams	50	31
+1518	Cascade	dry hop	aroma	grams	50	31
+1519	Ahtanum	dry hop	aroma	grams	25	31
+1520	Simcoe	dry hop	aroma	grams	25	31
+1521	Columbus	dry hop	aroma	grams	37.5	31
+1522	First Gold	start	bitter	grams	50	32
+1523	First Gold	end	flavour	grams	50	32
+1524	Sorachi Ace	start	bitter	grams	14.5	33
+1525	Sorachi Ace	end	flavour	grams	20	33
+1526	First Gold	start	bitter	grams	18.5	34
+1527	Willamette	middle	flavour	grams	12.5	34
+1528	Hallertauer Mittelfrüh	middle	flavour	grams	6	34
+1529	Bramling Cross	middle	bitter	grams	10	35
+1530	Chinook	start	bitter	grams	50	36
+1531	Cascade	middle	flavour	grams	25	36
+1532	Citra	middle	flavour	grams	25	36
+1533	Chinook	middle	flavour	grams	25	36
+1534	Chinook	end	flavour	grams	25	36
+1535	Citra	end	flavour	grams	25	36
+1536	Cascade	end	flavour	grams	25	36
+1537	Cascade	dry hop	aroma	grams	125	36
+1538	Chinook	dry hop	aroma	grams	125	36
+1539	Citra	dry hop	aroma	grams	125	36
+1540	Columbus Extract	start	bitter	grams	31	37
+1541	Columbus	start	bitter	grams	19.5	37
+1542	Columbus	middle	flavour	grams	19.5	37
+1543	Centennial	middle	flavour	grams	19.5	37
+1544	Simcoe	middle	flavour	grams	19.5	37
+1545	Columbus	end	flavour	grams	19.5	37
+1546	Centennial	end	flavour	grams	19.5	37
+1547	Centennial	dry hop	aroma	grams	115.5	37
+1548	Columbus	dry hop	aroma	grams	96	37
+1549	Simcoe	dry hop	aroma	grams	96	37
+1550	Amarillo	dry hop	aroma	grams	77	37
+1551	Centennial	start	bitter	grams	5	38
+1552	Amarillo	start	bitter	grams	5	38
+1553	Centennial	middle	flavour	grams	10	38
+1554	Amarillo	middle	flavour	grams	10	38
+1555	Centennial	end	flavour	grams	17.5	38
+1556	Amarillo	end	flavour	grams	17.5	38
+1557	Kohatu	start	bitter	grams	37.5	39
+1558	Kohatu	middle	flavour	grams	25	39
+1559	Kohatu	end	flavour	grams	37.5	39
+1560	Kohatu	dry hop	aroma	grams	250	39
+1561	Citra	start	bitter	grams	4	40
+1562	Citra	middle	flavour	grams	37.5	40
+1563	Citra	end	flavour	grams	37.5	40
+1564	Blackberry Concentrate	end	flavour	grams	62.5	40
+1565	Sour Cherry Puree	end	flavour	grams	250	40
+1566	Citra	dry hop	aroma	grams	112.5	40
+1567	Mosaic	dry hop	aroma	grams	200	40
+1568	Centennial	dry hop	aroma	grams	187.5	40
+1569	CO2 Extract	start	bitter	grams	20	41
+1570	Willamette	end	flavour	grams	50	41
+1571	Columbus Extract	start	bitter	grams	30.8	42
+1572	Columbus	start	bitter	grams	19.2	42
+1573	Columbus	middle	flavour	grams	19.2	42
+1574	Centennial	middle	flavour	grams	19.2	42
+1575	Simcoe	middle	flavour	grams	19.2	42
+1576	Columbus	end	flavour	grams	19.2	42
+1577	Centennial	end	flavour	grams	19.2	42
+1578	Simcoe	end	flavour	grams	19.2	42
+1579	Centennial	dry hop	aroma	grams	115.4	42
+1580	Columbus	dry hop	aroma	grams	96.2	42
+1581	Simcoe	dry hop	aroma	grams	96.2	42
+1582	Amarillo	dry hop	aroma	grams	76.9	42
+1583	Ahtanum	start	bitter	grams	25	43
+1584	Ahtanum	end	flavour	grams	25	43
+1585	Nelson Sauvin	start	bitter	grams	20	44
+1586	Motueka	start	bitter	grams	20	44
+1587	Nelson Sauvin	middle	flavour	grams	10	44
+1588	Motueka	middle	flavour	grams	10	44
+1589	Nelson Sauvin	end	flavour	grams	20	44
+1590	Motueka	end	flavour	grams	20	44
+1591	Motueka	dry hop	aroma	grams	100	44
+1592	Nelson Sauvin	dry hop	aroma	grams	87.5	44
+1593	Amarillo	start	bitter	grams	25	45
+1594	Amarillo	middle	flavour	grams	12.5	45
+1595	Bramling Cross	end	flavour	grams	12.5	45
+1596	Amarillo	end	flavour	grams	50	45
+1597	Nelson Sauvin	start	bitter	grams	6.25	46
+1598	Centennial	start	bitter	grams	12.5	46
+1599	Nelson Sauvin	end	flavour	grams	12.5	46
+1600	Amarillo	end	flavour	grams	12.5	46
+1601	Centennial	end	flavour	grams	12.5	46
+1602	Nelson Sauvin	dry hop	aroma	grams	12.5	46
+1603	Amarillo	dry hop	aroma	grams	12.5	46
+1604	Centennial	dry hop	aroma	grams	12.5	46
+1605	Sorachi Ace	start	bitter	grams	62.5	47
+1606	Willamette	end	aroma	grams	25	47
+1607	Goldings	start	bitter	grams	37.5	48
+1608	Goldings	middle	flavour	grams	25	48
+1609	Goldings	end	flavour	grams	37.5	48
+1610	Goldings	dry hop	aroma	grams	125	48
+1611	Bramling Cross	start	bitter	grams	30	49
+1612	Simcoe	middle	flavour	grams	12.5	49
+1613	Saaz	middle	flavour	grams	15	49
+1614	Simcoe	end	flavour	grams	12.5	49
+1615	Saaz	end	flavour	grams	15	49
+1616	First Gold	start	bitter	grams	35	50
+\.
+
+
+--
+-- Data for Name: ingredients_malt; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ingredients_malt (id, name, amount_unit, amount_value, beer_id) FROM stdin;
+1095	Maris Otter Extra Pale	kilograms	3.3	1
+1096	Caramalt	kilograms	0.2	1
+1097	Munich	kilograms	0.4	1
+1098	Maris Otter Extra Pale	kilograms	3.25	2
+1099	Caramalt	kilograms	0.2	2
+1100	Munich	kilograms	0.4	2
+1101	Propino Pale Malt	kilograms	1.63	3
+1102	Wheat Malt	kilograms	1.63	3
+1103	Propino Pale Malt for kettle souring	kilograms	0.03	3
+1104	Acidulated Malt for kettle souring	kilograms	0.03	3
+1105	Extra Pale	kilograms	4.58	4
+1106	Caramalt	kilograms	0.25	4
+1107	Dark Crystal	kilograms	0.06	4
+1108	Munich	kilograms	0.25	4
+1109	Lager Malt	kilograms	6.63	5
+1110	Wheat	kilograms	0.38	5
+1111	Extra Pale	kilograms	3.63	6
+1112	Munich	kilograms	0.13	6
+1113	Wheat	kilograms	0.25	6
+1114	Extra Pale	kilograms	9.69	7
+1115	Chocolate	kilograms	0.19	7
+1116	Carafa Special Malt Type 3	kilograms	0.44	7
+1117	Extra Pale	kilograms	3.33	8
+1118	Munich	kilograms	0.42	8
+1119	Caramalt	kilograms	0.28	8
+1120	Acidulated Malt	kilograms	0.07	8
+1121	Munich	kilograms	5.63	9
+1122	Flaked Oats	kilograms	1.88	9
+1123	Wheat	kilograms	1.88	9
+1124	Caramalt	kilograms	1.25	9
+1125	Crystal	kilograms	0.63	9
+1126	Dark Crystal	kilograms	0.63	9
+1127	Chocolate	kilograms	0.31	9
+1128	Peated Malt	kilograms	0.13	9
+1129	Amber	kilograms	0.13	9
+1130	Brown	kilograms	0.13	9
+1131	Extra Pale	kilograms	6.38	10
+1132	Crystal 150	kilograms	0.13	10
+1133	Caramalt	kilograms	0.25	10
+1134	Pale Ale	kilograms	2.18	11
+1135	Caramalt	kilograms	0.3	11
+1136	Dark Crystal	kilograms	0.3	11
+1137	Smoked Weyermann	kilograms	1.8	11
+1138	Flaked Oats	kilograms	0.6	11
+1139	Brown	kilograms	0.6	11
+1140	Amber	kilograms	0.1	11
+1141	Chocolate	kilograms	0.05	11
+1142	Munich	kilograms	0.6	11
+1143	Crystal 150	kilograms	0.2	11
+1144	Pale Ale	kilograms	3.13	12
+1145	Caramalt	kilograms	0.25	12
+1146	Crystal 150	kilograms	0.18	12
+1147	Carafa Special Malt Type 1	kilograms	0.25	12
+1148	Maris Otter Extra Pale	kilograms	3.44	13
+1149	Caramalt	kilograms	0.63	13
+1150	Crystal 150	kilograms	0.31	13
+1151	Carafa Special Malt Type 1	kilograms	0.31	13
+1152	Carafa Special Malt Type 3	kilograms	0.31	13
+1153	Maris Otter Extra Pale	kilograms	2.5	14
+1154	Caramalt	kilograms	1.25	14
+1155	Munich	kilograms	0.61	14
+1156	Crystal 150	kilograms	0.28	14
+1157	Dark Crystal 350-400	kilograms	0.2	14
+1158	Pale Ale - Tipple	kilograms	11.1	15
+1159	Caramalt	kilograms	0.94	15
+1160	Crystal	kilograms	0.44	15
+1161	Extra Pale - Spring Blend	kilograms	5	16
+1162	Caramalt	kilograms	1.25	16
+1163	Crystal 150	kilograms	0.63	16
+1164	Chocolate	kilograms	0.63	16
+1165	Roasted Barley	kilograms	0.63	16
+1166	Wheat	kilograms	0.31	16
+1167	Flaked Oats	kilograms	0.31	16
+1168	Smoked Malt	kilograms	0.06	16
+1169	Pale Ale	kilograms	6.13	17
+1170	Crystal 150	kilograms	0.25	17
+1171	Caramalt	kilograms	0.38	17
+1172	Carafa Special Malt Type 1	kilograms	0.13	17
+1173	Carafa Special Malt Type 3	kilograms	0.13	17
+1174	Extra Pale	kilograms	5.06	18
+1175	Caramalt	kilograms	0.25	18
+1176	Dark Crystal	kilograms	0.06	18
+1177	Extra Pale	kilograms	6.12	19
+1178	Caramalt	kilograms	0.8	19
+1179	Extra Pale	kilograms	5.63	20
+1180	Wheat	kilograms	0.69	20
+1181	Crystal	kilograms	0.63	20
+1182	Extra Pale	kilograms	2.69	21
+1183	Wheat	kilograms	1.25	21
+1184	Caramalt	kilograms	0.38	21
+1185	Extra Pale	kilograms	10	22
+1186	Caramalt	kilograms	1.88	22
+1187	Munich	kilograms	1.25	22
+1188	Amber	kilograms	0.63	22
+1189	Extra Pale	kilograms	5.8	23
+1190	Extra Pale	kilograms	12.5	24
+1191	Wheat	kilograms	2.5	25
+1192	Extra Pale	kilograms	2.06	25
+1193	Extra Pale	kilograms	2.81	26
+1194	Caramalt	kilograms	0.63	26
+1195	Crystal 120	kilograms	0.31	26
+1196	Extra Pale	kilograms	8	27
+1197	Wheat	kilograms	0.5	27
+1198	Flaked Oats	kilograms	1.38	27
+1199	Dark Crystal	kilograms	0.88	27
+1200	Carafa Special Malt Type 1	kilograms	0.63	27
+1201	Carafa Special Malt Type 3	kilograms	0.63	27
+1202	Honey	kilograms	0.7	27
+1203	Extra Pale - Spring Blend	kilograms	5.87	28
+1204	Caramalt	kilograms	0.37	28
+1205	Crystal 150	kilograms	0.19	28
+1206	Extra Pale	kilograms	4.75	29
+1207	Caramalt	kilograms	1.25	29
+1208	Crystal 150	kilograms	0.5	29
+1209	Dark Crystal	kilograms	0.13	29
+1210	Extra Pale	kilograms	5	30
+1211	Caramalt	kilograms	0.31	30
+1212	Dark Crystal	kilograms	0.06	30
+1213	Munich	kilograms	0.31	30
+1214	Munich	kilograms	0.13	31
+1215	Caramalt	kilograms	0.19	31
+1216	Crystal 150	kilograms	0.06	31
+1217	Amber	kilograms	0.03	31
+1218	Dark Crystal	kilograms	0.13	31
+1219	Chocolate	kilograms	0.06	31
+1220	Wheat	kilograms	0.06	31
+1221	Rye	kilograms	0.13	31
+1222	Extra Pale	kilograms	10	32
+1223	Carafa Special Malt Type 1	kilograms	0.94	32
+1224	Carafa Special Malt Type 3	kilograms	0.94	32
+1225	Flaked Oats	kilograms	1.88	32
+1226	Pale Crystal	kilograms	1.25	32
+1227	Dark Crystal	kilograms	0.63	32
+1228	Extra Pale	kilograms	6.38	33
+1229	Crystal 150	kilograms	0.13	33
+1230	Caramalt	kilograms	0.25	33
+1231	Extra Pale	kilograms	1.75	34
+1232	Munich	kilograms	0.44	34
+1233	Dark Crystal	kilograms	0.5	34
+1234	Wheat	kilograms	0.56	34
+1235	Flaked Oats	kilograms	0.56	34
+1236	Carafa Special Malt Type 3	kilograms	0.13	34
+1237	Amber	kilograms	0.25	34
+1238	Weyermann Beech Smoked	kilograms	0.06	34
+1239	Propino Pale Malt	kilograms	1.63	35
+1240	Wheat Malt	kilograms	1.63	35
+1241	Propino Pale Malt for kettle souring	kilograms	0.03	35
+1242	Acidulated Malt for kettle souring	kilograms	0.03	35
+1243	Extra Pale	kilograms	9.35	36
+1244	Munich	kilograms	0.63	36
+1245	Crystal 150	kilograms	1	36
+1246	Chocolate	kilograms	0.06	36
+1247	Extra Pale	kilograms	6.3	37
+1248	Caramalt	kilograms	0.38	37
+1249	Crystal 150	kilograms	0.29	37
+1250	Extra Pale	kilograms	4.58	38
+1251	Caramalt	kilograms	0.25	38
+1252	Dark Crystal	kilograms	0.06	38
+1253	Munich	kilograms	0.25	38
+1254	Extra Pale	kilograms	5.65	39
+1255	Caramalt	kilograms	0.31	39
+1256	Dark Crystal	kilograms	0.06	39
+1257	Extra Pale	kilograms	5.77	40
+1258	Caramalt	kilograms	0.63	40
+1259	Wheat	kilograms	0.63	40
+1260	Pale Ale	kilograms	9	41
+1261	Rye	kilograms	0.63	41
+1262	Amber	kilograms	0.38	41
+1263	Dark Crystal	kilograms	0.88	41
+1264	Roasted Barley	kilograms	0.25	41
+1265	Chocolate	kilograms	0.5	41
+1266	Carafa Special Malt Type 1	kilograms	0.25	41
+1267	Extra Pale	kilograms	7.4	42
+1268	Caramalt	kilograms	0.38	42
+1269	Crystal 150	kilograms	0.29	42
+1270	Extra Pale	kilograms	2.13	43
+1271	Wheat	kilograms	2.5	43
+1272	Pale Crystal	kilograms	0.13	43
+1273	Extra Pale	kilograms	4.7	44
+1274	Munich	kilograms	0.38	44
+1275	Acidulated Malt	kilograms	0.63	44
+1276	Extra Pale	kilograms	4.06	45
+1277	Caramalt	kilograms	0.31	45
+1278	Crystal 120	kilograms	0.23	45
+1279	Dark Crystal	kilograms	0.94	45
+1280	Extra Pale	kilograms	12.5	46
+1281	Maris Otter Extra Pale	kilograms	6.5625	47
+1282	Caramalt	kilograms	0.3125	47
+1283	Munich	kilograms	1.25	47
+1284	Crystal 150	kilograms	0.3125	47
+1285	Popcorn	kilograms	0.00625	47
+1286	Extra Pale	kilograms	5	48
+1287	Caramalt	kilograms	0.31	48
+1288	Dark Crystal	kilograms	0.06	48
+1289	Munich	kilograms	0.31	48
+1290	Wheat	kilograms	5	49
+1291	Extra Pale	kilograms	2	49
+1292	Munich	kilograms	2	49
+1293	Caramalt	kilograms	1.13	49
+1294	Extra Pale	kilograms	4.69	50
+1295	Pale Chocolate	kilograms	0.23	50
+1296	Chocolate	kilograms	0.7	50
+1297	Dark Crystal	kilograms	0.35	50
+1298	Flaked Oats	kilograms	0.47	50
+1299	Caramalt	kilograms	0.35	50
+\.
+
+
+--
+-- Name: food_pairing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.food_pairing_id_seq', 732, true);
+
+
+--
+-- Name: ingredients_hops_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.ingredients_hops_id_seq', 1616, true);
+
+
+--
+-- Name: ingredients_malt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.ingredients_malt_id_seq', 1299, true);
+
+
+--
+-- Name: beer_food_pairing_mapping beer_food_pairing_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.beer_food_pairing_mapping
+    ADD CONSTRAINT beer_food_pairing_mapping_pkey PRIMARY KEY (beer_id, food_pairing_id);
+
+
+--
+-- Name: beer beer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.beer
+    ADD CONSTRAINT beer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: beers beers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.beers
+    ADD CONSTRAINT beers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: food_pairing food_pairing_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.food_pairing
+    ADD CONSTRAINT food_pairing_name_key UNIQUE (name);
+
+
+--
+-- Name: food_pairing food_pairing_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.food_pairing
+    ADD CONSTRAINT food_pairing_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ingredients_hops ingredients_hops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingredients_hops
+    ADD CONSTRAINT ingredients_hops_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ingredients_malt ingredients_malt_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingredients_malt
+    ADD CONSTRAINT ingredients_malt_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ix_beers_2_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_beers_2_index ON public.beers_2 USING btree (index);
+
+
+--
+-- Name: beer_food_pairing_mapping beer_food_pairing_mapping_beer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.beer_food_pairing_mapping
+    ADD CONSTRAINT beer_food_pairing_mapping_beer_id_fkey FOREIGN KEY (beer_id) REFERENCES public.beer(id);
+
+
+--
+-- Name: beer_food_pairing_mapping beer_food_pairing_mapping_food_pairing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.beer_food_pairing_mapping
+    ADD CONSTRAINT beer_food_pairing_mapping_food_pairing_id_fkey FOREIGN KEY (food_pairing_id) REFERENCES public.food_pairing(id);
+
+
+--
+-- Name: ingredients_hops ingredients_hops_beer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingredients_hops
+    ADD CONSTRAINT ingredients_hops_beer_id_fkey FOREIGN KEY (beer_id) REFERENCES public.beer(id);
+
+
+--
+-- Name: ingredients_malt ingredients_malt_beer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ingredients_malt
+    ADD CONSTRAINT ingredients_malt_beer_id_fkey FOREIGN KEY (beer_id) REFERENCES public.beer(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
